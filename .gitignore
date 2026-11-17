@@ -16,7 +16,6 @@ samples/
 tools/
 
 # Large or third-party assets
-assets/fonts/
 assets/hanzi-data/
 
 # Backups

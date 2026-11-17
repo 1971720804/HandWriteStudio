@@ -4,6 +4,18 @@
 
 当前版本：0.4.20
 
+## 界面与效果
+
+<p align="center">
+  <img src="docs/screenshots/main-window.png" width="900" alt="HandWriteStudio 主界面">
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/handwriting-page.png" width="520" alt="手写效果">
+</p>
+
+左边用普通字体编辑排版，右边实时预览；表格、图片、逐页预设都在同一份文档里。
+
 ## 运行
 
 源码方式：

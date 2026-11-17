@@ -5,7 +5,9 @@ __pycache__/
 
 # Build / release outputs
 build/
+build_new/
 dist/
+dist_new/
 release_tmp/
 _release_v021/
 导出/
@@ -20,3 +22,6 @@ assets/hanzi-data/
 
 # Backups
 *.bak-*
+assets/icon_old.*
+assets/icon_new.*
+assets/papers/扫描文件_*.jpg

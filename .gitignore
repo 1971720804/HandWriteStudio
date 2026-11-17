@@ -1,0 +1,23 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+
+# Build / release outputs
+build/
+dist/
+release_tmp/
+_release_v021/
+导出/
+*.zip
+
+# Local experiments and samples
+samples/
+tools/
+
+# Large or third-party assets
+assets/fonts/
+assets/hanzi-data/
+
+# Backups
+*.bak-*

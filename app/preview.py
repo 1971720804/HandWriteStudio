@@ -19,6 +19,7 @@ from PySide6.QtWidgets import (
 
 from .renderer import HandRenderer, make_renderer
 from .settings import HandStyle
+from .watermark import watermark_lines, watermark_short
 
 PREVIEW_DPI = 150
 
@@ -308,6 +309,7 @@ class PreviewWindow(QDialog):
         root.addWidget(self.scroll, 1)
         self.canvas.installEventFilter(self)
         self.scroll.viewport().installEventFilter(self)
+        self._watermark = None
 
         self.set_pages(pages, page_w, page_h, margins)
 
@@ -340,10 +342,36 @@ class PreviewWindow(QDialog):
 
     def resizeEvent(self, event) -> None:  # noqa: N802
         super().resizeEvent(event)
+        self._place_watermark()
         if self._fit_mode == "width":
             QTimer.singleShot(0, self.fit_width)
         elif self._fit_mode == "page":
             QTimer.singleShot(0, self.fit_page)
+
+    def _make_watermark(self) -> QLabel:
+        label = QLabel(self.scroll.viewport())
+        label.setText(watermark_short())
+        label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        label.setStyleSheet(
+            "QLabel { color: #eef4fb; background: rgba(18, 24, 32, 215);"
+            " border: 1px solid rgba(120, 165, 210, 150);"
+            " border-radius: 8px; }"
+        )
+        label.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, True)
+        label.raise_()
+        return label
+
+    def _place_watermark(self) -> None:
+        label = getattr(self, "_watermark", None)
+        if label is None or self.scroll is None:
+            return
+        vp = self.scroll.viewport()
+        fm = label.fontMetrics()
+        w = fm.horizontalAdvance(label.text()) + 28
+        h = fm.height() + 14
+        label.setFixedSize(w, h)
+        label.move(vp.width() - w - 18, vp.height() - h - 16)
+        label.raise_()
 
     def fit_width(self) -> None:
         self._fit_mode = "width"
@@ -458,6 +486,7 @@ class PreviewPanel(QWidget):
         self.scroll.setWidget(self.canvas)
         root.addWidget(self.scroll, 1)
         self.scroll.viewport().installEventFilter(self)
+        self._watermark = None
 
     # ---------- 外部接口 ----------
 
@@ -523,6 +552,31 @@ class PreviewPanel(QWidget):
 
     def page_width(self) -> float:
         return self.style.page_width if self.style else 595.0
+
+    def _make_watermark(self) -> QLabel:
+        label = QLabel(self.scroll.viewport())
+        label.setText(watermark_short())
+        label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        label.setStyleSheet(
+            "QLabel { color: #eef4fb; background: rgba(18, 24, 32, 215);"
+            " border: 1px solid rgba(120, 165, 210, 150);"
+            " border-radius: 8px; }"
+        )
+        label.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, True)
+        label.raise_()
+        return label
+
+    def _place_watermark(self) -> None:
+        label = getattr(self, "_watermark", None)
+        if label is None or self.scroll is None:
+            return
+        vp = self.scroll.viewport()
+        fm = label.fontMetrics()
+        w = fm.horizontalAdvance(label.text()) + 28
+        h = fm.height() + 14
+        label.setFixedSize(w, h)
+        label.move(vp.width() - w - 16, vp.height() - h - 14)
+        label.raise_()
 
     def eventFilter(self, obj, event):  # noqa: N802
         if obj is self.scroll.viewport() and event.type() == QEvent.Type.Resize:

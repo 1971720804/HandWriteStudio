@@ -17,6 +17,11 @@ _release_v021/
 samples/
 tools/
 
+# Local promo renders / old builds / shortcuts
+promo/
+dist_old_*/
+*.lnk
+
 # Large or third-party assets
 assets/hanzi-data/
 

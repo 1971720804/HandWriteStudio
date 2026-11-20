@@ -83,8 +83,8 @@ class HandStyle:
     x_scale: float = 1.0
     y_scale: float = 1.0
     theta_scale: float = 1.0
-    stroke_offset_scale: float = 0.0
-    stroke_theta_scale: float = 0.0
+    stroke_offset_scale: float = 1.0
+    stroke_theta_scale: float = 1.0
     line_theta_scale: float = 1.0
     alpha_scale: float = 1.0
 

@@ -128,7 +128,10 @@ class MainWindow(QMainWindow):
         self._preview_timer.setInterval(300)
         self._preview_timer.timeout.connect(self._refresh_preview)
 
-        self.setWindowTitle("HandWriteStudio")
+        from .watermark import watermark_lines
+
+        _wa, _wb, _wc = watermark_lines()
+        self.setWindowTitle(f"HandWriteStudio　{_wa} · {_wb} · {_wc}")
         icon_path = ASSETS_DIR / "icon.ico"
         if icon_path.exists():
             self.setWindowIcon(QIcon(str(icon_path)))
@@ -293,9 +296,20 @@ class MainWindow(QMainWindow):
         self.status_render = QLabel("")
         for w in (self.status_pages, self.status_words, self.status_render):
             w.setStyleSheet("color:#5f6875; padding: 0 8px;")
+        from .watermark import watermark_lines
+
+        _a, _b, _c = watermark_lines()
+        self.watermark_label = QLabel(f"{_a} · {_b} · {_c}")
+        self.watermark_label.setStyleSheet(
+            "QLabel { color:#ffffff; background:#b3261e;"
+            " border-radius:5px; padding:2px 10px; font-size:12px; font-weight:600; }"
+        )
+        self.watermark_label.setToolTip(f"{_a}｜{_b}｜{_c}")
+        self.statusBar().addPermanentWidget(self.watermark_label)
         self.statusBar().addPermanentWidget(self.status_pages)
         self.statusBar().addPermanentWidget(self.status_words)
         self.statusBar().addPermanentWidget(self.status_render)
+        self.statusBar().setToolTip(f"{_a} · {_b} · {_c}")
         self.statusBar().showMessage("就绪", 3000)
 
     def _build_menus(self) -> None:
@@ -1642,7 +1656,12 @@ class MainWindow(QMainWindow):
         self._dirty = dirty
         name = Path(self.current_path).name if self.current_path else "未命名"
         star = " *" if dirty else ""
-        self.setWindowTitle(f"{name}{star} — HandWriteStudio v{__version__}")
+        from .watermark import watermark_lines
+
+        _a, _b, _c = watermark_lines()
+        self.setWindowTitle(
+            f"{name}{star} — HandWriteStudio v{__version__}　{_a} · {_b} · {_c}"
+        )
 
     def closeEvent(self, event) -> None:  # noqa: N802
         if self._maybe_save():

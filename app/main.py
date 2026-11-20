@@ -40,6 +40,16 @@ def main() -> int:
         return run_selftest()
     window = MainWindow()
     window.show()
+    if "--demo" in sys.argv:
+        from .demo import run_demo
+
+        run_demo(window)
+    elif "--demo-notes" in sys.argv:
+        from .demo_notes import run_demo_notes
+
+        idx = sys.argv.index("--demo-notes")
+        hws = sys.argv[idx + 1] if idx + 1 < len(sys.argv) else ""
+        run_demo_notes(window, hws)
     return app.exec()
 
 

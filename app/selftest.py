@@ -34,14 +34,15 @@ def run_selftest() -> int:
 
         font = default_font()
         lines.append(f"font={font}")
-        renderer = HandRenderer(html, HandStyle())
+        plain_style = HandStyle()
+        plain_style.stroke_offset_scale = 0.0
+        plain_style.stroke_theta_scale = 0.0
+        renderer = HandRenderer(html, plain_style)
         image = renderer.render_page_image(0, 100)
         image.save(str(out / "selftest.png"))
         lines.append(f"render={image.width()}x{image.height()} pages={renderer.page_count()}")
 
-        stroke_style = HandStyle()
-        stroke_style.stroke_offset_scale = 1.0
-        stroke_style.stroke_theta_scale = 1.0
+        stroke_style = HandStyle()  # 默认即为 100% 笔画抖动
         stroke_renderer = HandRenderer(html, stroke_style)
         stroke_image = stroke_renderer.render_page_image(0, 100)
         stroke_image.save(str(out / "selftest_stroke.png"))
